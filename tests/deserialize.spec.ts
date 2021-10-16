@@ -17,7 +17,7 @@ describe('deserialize', () => {
             }
           },
           relationships: {
-            address: {
+            home_address: {
               data: {
                 type: 'addr',
                 id: 1
@@ -53,7 +53,7 @@ describe('deserialize', () => {
           monthOfBirth: 1,
           yearOfBirth: 1970
         },
-        address: {
+        homeAddress: {
           id: 1,
           street: 'Street 1'
         },

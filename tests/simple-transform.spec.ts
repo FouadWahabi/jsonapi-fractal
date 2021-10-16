@@ -5,7 +5,7 @@ describe('transform', () => {
     const entity = {
       firstName: "Joe",
       lastName: "Doe",
-      address: {
+      homeAddress: {
         id: 1
       },
       images: [
@@ -15,7 +15,7 @@ describe('transform', () => {
     };
 
     const serialized = serialize(entity, 'users', {
-      relationships: ['address', 'images'],
+      relationships: ['homeAddress', 'images'],
       changeCase: 'kebabCase'
     });
 
@@ -27,9 +27,9 @@ describe('transform', () => {
           'last-name': 'Doe'
         },
         relationships: {
-          address: {
+          'home-address': {
             data: {
-              type: 'address',
+              type: 'home-address',
               id: 1
             }
           },

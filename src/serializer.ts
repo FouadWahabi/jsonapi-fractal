@@ -3,7 +3,7 @@ import DefaultTransformer from './DefaultTransformer'
 import Transformer from './Transformer'
 import JsonApiError from './errors/JsonApiError'
 import Options from './Options'
-import { whitelist, changeCase } from './utils'
+import { whitelist, changeCase, stringChangeCase } from './utils'
 import JsonApiResponse from './JsonApiResponse'
 
 export function transform (): Context {
@@ -66,7 +66,12 @@ function serializeEntity (entity, transformer: Transformer, options: Options, in
   for (const relation of transformer.relationships) {
     const ctx = transformer[relation](entity, options);
 
-    relationships[relation] = {
+    let casedRelationName = relation
+    if (options.changeCase) {
+      casedRelationName = stringChangeCase(relation, options.changeCase)
+    }
+
+    relationships[casedRelationName] = {
       data: Array.isArray(ctx.input)
         ? ctx.input.map((e) => serializeRelation(e, ctx.transformer, options, ctx.included, includedByType))
         : serializeRelation(ctx.input, ctx.transformer, options, ctx.included, includedByType)
@@ -138,8 +143,13 @@ function serializeRelation (entity, transformer: Transformer, options: Options, 
     }
   }
 
+  let casedRelationshipType = transformer.type
+  if (options.changeCase) {
+    casedRelationshipType = stringChangeCase(casedRelationshipType, options.changeCase)
+  }
+
   return {
-    type: transformer.type,
+    type: casedRelationshipType,
     id
   }
 }

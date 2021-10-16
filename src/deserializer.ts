@@ -1,4 +1,4 @@
-import { changeCase } from './utils'
+import { changeCase, stringChangeCase } from './utils'
 
 export default function deserialize (response, options = {}) {
   if (!options) {
@@ -44,6 +44,11 @@ function parseJsonApiSimpleResourceData (data, included, useCache, options) {
     for (const relationName of Object.keys(data.relationships)) {
       const relationRef = data.relationships[relationName]
 
+      let casedRelationName = relationName
+      if (options.changeCase) {
+        casedRelationName = stringChangeCase(relationName, options.changeCase)
+      }
+
       if (Array.isArray(relationRef.data)) {
         const items = []
 
@@ -58,16 +63,16 @@ function parseJsonApiSimpleResourceData (data, included, useCache, options) {
           items.push(item)
         })
 
-        resource[relationName] = items
+        resource[casedRelationName] = items
       } else if (relationRef && relationRef.data) {
-        resource[relationName] = findJsonApiIncluded(
+        resource[casedRelationName] = findJsonApiIncluded(
           included,
           relationRef.data.type,
           relationRef.data.id,
           options
         )
       } else {
-        resource[relationName] = null
+        resource[casedRelationName] = null
       }
     }
   }
